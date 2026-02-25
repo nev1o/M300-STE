@@ -629,7 +629,7 @@ Ein Beispiel dazu findet man unter fwrp und die Beschreibung unter 25 Infrastruk
 
 
 ### 03 – Docker & Containerisierung
-1. Einführung in Container-Technologie
+# 1. Einführung in Container-Technologie
 
 Container sind kein neues Konzept. Bereits in klassischen UNIX-Systemen existierten Mechanismen zur Isolation von Prozessen und Dateisystemen.
 
@@ -650,8 +650,8 @@ eine einfache CLI bereitgestellt wurde
 
 eine Registry (Docker Hub) entstand
 
-2. Container vs. Virtuelle Maschinen
-2.1 Virtuelle Maschine (VirtualBox / Vagrant)
+## 2. Container vs. Virtuelle Maschinen
+# 2.1 Virtuelle Maschine (VirtualBox / Vagrant)
 
 vollständiges Betriebssystem
 
@@ -661,7 +661,7 @@ höherer Ressourcenverbrauch
 
 langsamer Start
 
-2.2 Container
+# 2.2 Container
 
 teilen sich Kernel des Hosts
 
@@ -680,11 +680,11 @@ Schwergewichtig	Leichtgewichtig
 
 Docker ergänzt somit unsere bisherige VM-basierte Umgebung optimal.
 
-3. Microservices
+# 3. Microservices
 
 Einer der wichtigsten Treiber für Docker ist die Microservices-Architektur.
 
-3.1 Monolithische Architektur
+# 3.1 Monolithische Architektur
 
 Ein grosses Programm
 
@@ -692,7 +692,7 @@ Vertikale Skalierung (mehr RAM, mehr CPU)
 
 Alles oder nichts skalieren
 
-3.2 Microservices Architektur
+# 3.2 Microservices Architektur
 
 Kleine, unabhängige Services
 
@@ -701,32 +701,24 @@ Kommunikation über Netzwerk (HTTP/REST)
 Horizontale Skalierung (mehr Instanzen)
 
 Vorteile:
-
 Bessere Skalierbarkeit
-
 Fehlertoleranz
-
 Technologiefreiheit pro Service
-
 Effiziente Ressourcennutzung
-
 Container sind ideal für Microservices, da jeder Service isoliert laufen kann.
 
-4. Docker Architektur
+# 4. Docker Architektur
 
 Docker besteht aus zwei Hauptkomponenten:
 
-4.1 Docker Daemon
+# 4.1 Docker Daemon
 
 Erstellt Images
-
 Startet Container
-
 Verwaltet Ressourcen
-
 Läuft im Hintergrund
 
-4.2 Docker Client
+# 4.2 Docker Client
 
 CLI-Tool (docker)
 
@@ -755,8 +747,8 @@ Standard: Docker Hub
 
 Alternativ: Private Registry
 
-5. Wichtige Docker Befehle
-5.1 Container starten
+## 5. Wichtige Docker Befehle
+# 5.1 Container starten
 docker run hello-world
 
 
@@ -769,21 +761,21 @@ Detached (im Hintergrund):
 
 docker run -d ubuntu sleep 20
 
-5.2 Container anzeigen
+# 5.2 Container anzeigen
 docker ps
 docker ps -a
 
-5.3 Images anzeigen
+# 5.3 Images anzeigen
 docker images
 
-5.4 Container löschen
+# 5.4 Container löschen
 docker rm container_name
 docker rm -f $(docker ps -a -q)
 
-5.5 Image löschen
+# 5.5 Image löschen
 docker rmi ubuntu
 
-6. Dockerfile – Images selbst bauen
+# 6. Dockerfile – Images selbst bauen
 
 Ein Dockerfile beschreibt, wie ein Image erzeugt wird.
 
@@ -803,7 +795,7 @@ Start:
 
 docker run -d -p 8080:80 myapache
 
-7. Netzwerk in Docker
+# 7. Netzwerk in Docker
 
 Container sind isoliert. Um sie erreichbar zu machen, müssen Ports veröffentlicht werden.
 
@@ -833,7 +825,7 @@ Container mit Netzwerk verbinden:
 
 docker run --network=isolated_nw ubuntu
 
-8. Persistente Daten – Volumes
+# 8. Persistente Daten – Volumes
 
 Standardmässig gehen Daten verloren, wenn ein Container gelöscht wird.
 
@@ -857,7 +849,7 @@ Container können neu gestartet werden
 
 Trennung von Code & Daten
 
-9. Image-Bereitstellung
+# 9. Image-Bereitstellung
 
 Images können:
 
@@ -874,7 +866,7 @@ Beispiel:
 docker tag myimage username/myimage
 docker push username/myimage
 
-10. Bezug zur bisherigen Vagrant-Umgebung
+# 10. Bezug zur bisherigen Vagrant-Umgebung
 
 In Kapitel 02 wurde Apache mittels Vagrant automatisiert installiert.
 
@@ -901,7 +893,7 @@ Ressourcenschonender
 
 Einfach skalierbar
 
-11. Sicherheit & Best Practices
+# 11. Sicherheit & Best Practices
 
 Kein latest-Tag verwenden
 
@@ -913,7 +905,7 @@ Nur benötigte Ports freigeben
 
 Volumes für persistente Daten nutzen
 
-12. Fazit
+# 12. Fazit
 
 Docker revolutioniert die Art und Weise, wie Software bereitgestellt wird.
 
