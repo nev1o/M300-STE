@@ -932,6 +932,67 @@ können Anwendungen schnell, skalierbar und reproduzierbar betrieben werden.
 Im Vergleich zur klassischen Virtualisierung mit VirtualBox bietet Docker eine deutlich modernere und effizientere Lösung für Entwicklungs- und Produktionsumgebungen.
 
 
+ 
+### Minecraft Server-Projekt mit Docker
 
-Projekt
-![Minecraft-Docjer](image.png)
+Als erstest die notwendigen Dateien erstellen:
+Im C:\Minecraft-Docker
+Datei "Data" und docker-compose.yml erstellt.
+
+![Minecraft-Docker](image.png)
+
+Im docker-compose.yml diesen code reinkopieren:
+"services:
+  mc:
+    image: itzg/minecraft-server:latest
+    container_name: minecraft
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "1.21.4"
+      MEMORY: "4G"
+      ONLINE_MODE: "TRUE"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped"
+
+![docker-compose.yml](image-1.png)
+
+Server starten
+Windows (PowerShell)
+
+Öffne PowerShell
+
+Tippe:
+
+cd C:\minecraft-docker
+docker compose up -d
+
+
+
+Logs anschauen (ob alles ok ist)
+docker logs -f minecraft
+
+Warte, bis du sowas siehst wie:
+
+Done (xx.xxxs)! For help, type "help"
+
+Dann läuft der Server.
+
+
+Joinen (Minecraft)
+
+IP wenn du am gleichen PC spielst: localhost
+
+IP im selben Netzwerk: die lokale IP deines Server-PCs, 10.2.0.2
+
+![IP](image-2.png)
+
+
+Multiplayer: 
+alle müssen im gleichen Netzwerk sein.
+Zusammen mit Mattia gemacht.
+und es het funktioniert.
+![Minecraft-gameplay](image-3.png)
