@@ -933,16 +933,37 @@ Im Vergleich zur klassischen Virtualisierung mit VirtualBox bietet Docker eine d
 
 
  
-### Minecraft Server-Projekt mit Docker
+### Minecraft Server mit Docker erstellen:
+Projektziel:
 
-Als erstest die notwendigen Dateien erstellen:
-Im C:\Minecraft-Docker
-Datei "Data" und docker-compose.yml erstellt.
+Ziel dieses Projekts war es, einen Minecraft Java Server mithilfe von Docker aufzusetzen und im lokalen Netzwerk spielbereit zu machen.
+Der Server basiert auf einem Docker-Container und verwendet das Image itzg/minecraft-server.
 
-![Minecraft-Docker](image.png)
+Projektstruktur
 
-Im docker-compose.yml diesen code reinkopieren:
-"services:
+# Zuerst wurde ein Projektordner erstellt:
+![minecraft-docker](image-4.png)
+
+"C:\minecraft-docker"
+
+Darin befinden sich folgende Dateien und Ordner:
+
+C:\minecraft-docker
+│
+├── data
+└── docker-compose.yml
+Erklärung
+
+data → Enthält alle Serverdaten (Welt, Plugins, Einstellungen)
+
+docker-compose.yml → Konfigurationsdatei für den Docker-Container
+
+Docker-Compose Konfiguration
+
+In die Datei docker-compose.yml wurde folgender Code eingefügt:
+![docker-compose.yml](image-5.png)
+
+services:
   mc:
     image: itzg/minecraft-server:latest
     container_name: minecraft
@@ -956,43 +977,65 @@ Im docker-compose.yml diesen code reinkopieren:
       ONLINE_MODE: "TRUE"
     volumes:
       - ./data:/data
-    restart: unless-stopped"
+    restart: unless-stopped
 
-![docker-compose.yml](image-1.png)
+## Server starten:
 
-Server starten
-Windows (PowerShell)
-
-Öffne PowerShell
-
-Tippe:
+PowerShell öffnen und folgenden Befehl ausführen:
 
 cd C:\minecraft-docker
 docker compose up -d
 
+Der Server startet nun im Hintergrund.
+Server-Status prüfen
 
+Mit folgendem Befehl können die Server-Logs angezeigt werden:
 
-Logs anschauen (ob alles ok ist)
-docker logs -f minecraft
+"docker logs -f minecraft"
 
-Warte, bis du sowas siehst wie:
+# Wenn folgende Meldung erscheint, ist der Server erfolgreich gestartet:
 
-Done (xx.xxxs)! For help, type "help"
+"Done (xx.xxxs)! For help, type "help""
 
-Dann läuft der Server.
+Verbindung zum Server
+Verbindung vom gleichen PC
 
+# Server-Adresse im Multiplayer-Menü:
 
-Joinen (Minecraft)
+localhost
+Verbindung im gleichen Netzwerk
 
-IP wenn du am gleichen PC spielst: localhost
+"Windows + R"
 
-IP im selben Netzwerk: die lokale IP deines Server-PCs, 10.2.0.2
+"cmd"
 
-![IP](image-2.png)
+# Befehl eingeben:
 
+"ipconfig"
 
-Multiplayer: 
-alle müssen im gleichen Netzwerk sein.
-Zusammen mit Mattia gemacht.
-und es het funktioniert.
-![Minecraft-gameplay](image-3.png)
+Beispiel: IPv4-Adresse: 10.2.0.2
+![IP](image-6.png)
+
+# In Minecraft eintragen:
+"10.2.0.2"
+
+Verbinden, sogar im Multiplayer gestestet und funktionier.
+Alle Spieler müssen sich im gleichen Netzwerk befinden.
+![Gameplay](image-7.png)
+(Leider wurde meinen Screenshot vom Server nicht gespeicheret, darum screenshot von Mattia.)
+
+## Aufgetretenes Problem:
+
+Beim ersten Start trat folgender Fehler auf:
+
+"SSLHandshakeException
+Failed to download mojang_1.21.4.jar"
+
+# Ursache:
+
+Das WLAN blockierte den Download der Minecraft-Server-Dateien.
+
+# Lösung:
+
+Durch Aktivieren eines VPNs konnte der Download erfolgreich durchgeführt werden.
+Nach dem vollständigen Download funktionierte der Server auch ohne VPN.
