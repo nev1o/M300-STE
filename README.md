@@ -979,7 +979,7 @@ services:
       - ./data:/data
     restart: unless-stopped
 
-## Server starten:
+# Server starten:
 
 PowerShell öffnen und folgenden Befehl ausführen:
 
@@ -1024,7 +1024,7 @@ Alle Spieler müssen sich im gleichen Netzwerk befinden.
 ![Gameplay](image-7.png)
 (Leider wurde meinen Screenshot vom Server nicht gespeicheret, darum screenshot von Mattia.)
 
-## Aufgetretenes Problem:
+# Aufgetretenes Problem:
 
 Beim ersten Start trat folgender Fehler auf:
 
