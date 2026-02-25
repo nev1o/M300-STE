@@ -4,7 +4,11 @@
 
 - [3. GitHub Account & Repository](#3-github-account--repository)
 - [02 - Infrastruktur](#02---infrastruktur)
-- 
+- [5. Vagrant](#5-vagrant)
+- [Fragen & Antworten – Cloud Computing, IaC und Vagrant](#fragen--antworten--cloud-computing-iac-und-vagrant)
+- [LB2 Hands-on – Automatisierung eines Serverdienstes mit Vagrant](#lb2-hands-on--automatisierung-eines-serverdienstes-mit-vagrant)
+- [03 – Docker & Containerisierung](#03--docker--containerisierung)
+- [Minecraft Server mit Docker erstellen:](#minecraft-server-mit-docker-erstellen)
 
 ### 3. GitHub Account & Repository
 3.1 GitHub Account
@@ -154,8 +158,8 @@ vagrant destroy -f
 
 
 
-### 02 - Infrastruktur
-# Cloud Computing, Infrastructure as Code, Vagrant, Packer und AWS
+# 02 - Infrastruktur
+### Cloud Computing, Infrastructure as Code, Vagrant, Packer und AWS
 
 ## 1. Cloud Computing
 
@@ -633,8 +637,8 @@ Ein Beispiel dazu findet man unter fwrp und die Beschreibung unter 25 Infrastruk
 
 
 
-### 03 – Docker & Containerisierung
-# 1. Einführung in Container-Technologie
+# 03 – Docker & Containerisierung
+### 1. Einführung in Container-Technologie
 
 Container sind kein neues Konzept. Bereits in klassischen UNIX-Systemen existierten Mechanismen zur Isolation von Prozessen und Dateisystemen.
 
@@ -930,7 +934,7 @@ Im Vergleich zur klassischen Virtualisierung mit VirtualBox bietet Docker eine d
 
 
  
-### Minecraft Server mit Docker erstellen:
+# Minecraft Server mit Docker erstellen:
 Projektziel:
 
 Ziel dieses Projekts war es, einen Minecraft Java Server mithilfe von Docker aufzusetzen und im lokalen Netzwerk spielbereit zu machen.
@@ -938,7 +942,7 @@ Der Server basiert auf einem Docker-Container und verwendet das Image itzg/minec
 
 Projektstruktur
 
-# Zuerst wurde ein Projektordner erstellt:
+### Zuerst wurde ein Projektordner erstellt:
 ![minecraft-docker](image-4.png)
 
 "C:\minecraft-docker"
