@@ -522,214 +522,103 @@ DevOps Tools Engineer (LPI)
 
 
 # LB2 Hands-on – Automatisierung eines Serverdienstes mit Vagrant
+Voraussetzungen
+10 Toolumgebung
+Mögliche Serverdienste für die Automatisierung
+Neue VM zum Testen erstellen
+Um einen Service zu automatisieren, ist es von Vorteil, eine VM zum Testen zu erstellen. In dieser können dann die Befehle manuell ausprobiert werden, bevor sie in Vagrantfile übertragen werden.
 
-## 1. Ziel der Übung
+Zuerst erzeugen wir ein neues Verzeichnis mit einer Vagrantfile mit einem Ubuntu 16.x (ubuntu/xenial64).
 
-Ziel dieser Übung ist es, einen Serverdienst mittels Vagrant zu automatisieren.  
-Dazu wird zuerst eine virtuelle Maschine erstellt, in der die benötigten Befehle manuell getestet werden. Anschließend werden diese Schritte in das Vagrantfile übertragen, sodass die Installation vollständig automatisiert abläuft.
-
----
-
-## 2. Voraussetzungen
-
-- Installierte Toolumgebung (VirtualBox, Vagrant)
-- Ubuntu Box: `ubuntu/xenial64`
-- Grundkenntnisse Linux / Bash
-
----
-
-## 3. Neue VM zum Testen erstellen
-
-Um einen Service zu automatisieren, ist es sinnvoll, eine separate VM zum Testen zu erstellen.  
-So können Installations- und Konfigurationsschritte manuell ausprobiert werden.
-
-### Verzeichnisstruktur erstellen
-
-```bash
 cd myM300/
 mkdir myVM
 cd myVM
 vagrant init ubuntu/xenial64
 vagrant up
-```
+Zum Testen wechseln wir in die VM
 
-### In die VM wechseln
-
-```bash
 vagrant ssh
-```
+Serverdienste auswählen
+Anschliessend suchen wir uns die Serverdienste aus, welche wir automatisieren wollen. Dabei hilft diese Wikiseite von Ubuntu.
 
----
+Wir haben uns für Webanalyzer entschieden, dazu braucht es jedoch auch den Apache Webserver.
 
-## 4. Auswahl der Serverdienste
+Zuerst müssen immer die Paketquellen von Ubuntu aktualisiert werden, dies erfolgt als Superuser (Linux = root, Windows = Administrator)
 
-Als Serverdienste wurden gewählt:
-
-- Apache Webserver
-- Webalizer (Webanalyzer)
-
-Da Webalizer Apache-Logdaten auswertet, muss zuerst Apache installiert werden.
-
----
-
-## 5. Manuelle Installation in der VM
-
-### Paketquellen aktualisieren
-
-```bash
 sudo apt-get update
-```
+Dann folgt die Installation von Apache. Dabei darf das Argument -y nicht vergessen werden, ansonsten bleibt der Installationsbefehl stehen und verlangt vom User eine manuelle Eingabe.
 
-### Apache installieren
-
-Wichtig: Das Argument `-y` verhindert manuelle Bestätigung.
-
-```bash
 sudo apt-get install -y apache2
-```
+Das/die Grundpaket(e) sind installiert, nun kümmern wir uns um den eigentlichen Service Webanalyzer
 
-### Webalizer installieren
+sudo apt-get install -y webalizer 
+Wenn alles läuft, schauen wir uns mit history die gemachten Eingaben an und kopieren die relevanten Befehle in die Vagrantfile.
 
-```bash
-sudo apt-get install -y webalizer
-```
+Feintuning
+Probleme
+Dateien sind nach dem Zerstören der VM nicht mehr vorhanden
+Port vom Webserver, in der VM, wird nicht weitergeleitet an Host.
+Es existiert keine index.html unter /var/www/webalizer/index.html. Siehe Hinweis bei Verwendung
+Der URL (z.B. via curl http://localhost/webalizer) von Webanalyzer kann nicht abgerufen werden
+Lösungen
+Dateien und Port Weiterleitung
 
-Nach erfolgreicher Installation können mit `history` die relevanten Befehle kopiert und später ins Vagrantfile übernommen werden.
+siehe Web Beispiel
+Um einen Output zu Erzeugen sind mehrere Aktionen nötig:
 
----
+Erzeugung von Trafic z.B. mittels curl http://localhost/ (PowerShell: Invoke-WebRequest)
 
-## 6. Feintuning und Problemlösungen
-
-### Typische Probleme
-
-- Dateien sind nach dem Zerstören der VM nicht mehr vorhanden.
-- Port 80 der VM ist nicht an den Host weitergeleitet.
-- Keine `index.html` unter `/var/www/webalizer/index.html`.
-- Webalizer-Ausgabe ist nicht über den Browser erreichbar.
-
----
-
-## 7. Lösungen
-
-### 7.1 Portweiterleitung und persistente Dateien
-
-Portweiterleitung erfolgt über:
-
-```ruby
-config.vm.network "forwarded_port", guest:80, host:8080
-```
-
-Persistente Dateien werden über ein Synced Folder realisiert:
-
-```ruby
-config.vm.synced_folder ".", "/var/www/html"
-```
-
----
-
-### 7.2 Testdaten erzeugen
-
-Webalizer wertet nur Archivdaten aus. Daher muss Traffic erzeugt werden:
-
-```bash
 curl http://localhost/ >/dev/null 2>&1
 curl http://localhost/ >/dev/null 2>&1
 curl http://localhost/ >/dev/null 2>&1
 curl http://localhost/ >/dev/null 2>&1
-curl http://localhost/bad >/dev/null 2>&1
-```
+curl http://localhost/bad >/dev/null 2>&1    
+Rotieren des Access Logs von Apache, weil Webanalyzer nur Archivdaten auswertet. Siehe Hinweis bei Verwendung
 
----
+sudo logrotate -f /etc/logrotate.d/apache2    
+Korrektur des Output Verzeichnisses in /etc/webalizer/webalizer.conf
 
-### 7.3 Logdateien rotieren
+sudo sed -i -e"s:/var/www/webalizer:/var/www/html/webalizer:" /etc/webalizer/webalizer.conf 
+Manuelle Erzeugung des Webanalyzer Ausgaben
 
-```bash
-sudo logrotate -f /etc/logrotate.d/apache2
-```
+sudo /etc/cron.daily/webalizer 
+Das komplette Vagrantfile sieht dann so aus:
 
----
-
-### 7.4 Output-Verzeichnis korrigieren
-
-```bash
-sudo sed -i -e"s:/var/www/webalizer:/var/www/html/webalizer:" /etc/webalizer/webalizer.conf
-```
-
----
-
-### 7.5 Webalizer-Ausgabe erzeugen
-
-```bash
-sudo /etc/cron.daily/webalizer
-```
-
----
-
-## 8. Vollständiges automatisiertes Vagrantfile
-
-```ruby
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/xenial64"
   config.vm.network "forwarded_port", guest:80, host:8080, auto_correct: true
-  config.vm.synced_folder ".", "/var/www/html"
-
-  config.vm.provider "virtualbox" do |vb|
-    vb.memory = "512"
-  end
-
-  config.vm.provision "shell", inline: <<-SHELL
-    set -o xtrace
-    sudo apt-get update
-    sudo apt-get -y install apache2 webalizer
-
-    # Testdaten erzeugen
-    curl http://localhost/ >/dev/null 2>&1
-    curl http://localhost/ >/dev/null 2>&1
-    curl http://localhost/ >/dev/null 2>&1
-    curl http://localhost/ >/dev/null 2>&1
-    curl http://localhost/bad >/dev/null 2>&1
-
-    # Patch Output-Verzeichnis
-    sudo sed -i -e"s:/var/www/webalizer:/var/www/html/webalizer:" /etc/webalizer/webalizer.conf
-    sudo mkdir -p /var/www/html/webalizer
-
-    # Logs rotieren und Analyse ausführen
-    sudo logrotate -f /etc/logrotate.d/apache2
-    sudo /etc/cron.daily/webalizer
-  SHELL
+  config.vm.synced_folder ".", "/var/www/html"  
+config.vm.provider "virtualbox" do |vb|
+  vb.memory = "512"  
 end
-```
+config.vm.provision "shell", inline: <<-SHELL
+  # Packages vom lokalen Server holen
+  # sudo sed -i -e"1i deb {{config.server}}/apt-mirror/mirror/archive.ubuntu.com/ubuntu xenial main restricted" /etc/apt/sources.list 
+  # Debug ON!!!
+  set -o xtrace  
+  sudo apt-get update
+  sudo apt-get -y install apache2 webalizer 
+  sudo /etc/cron.daily/webalizer
+  # Testdaten erzeugen
+  curl http://localhost/ >/dev/null 2>&1
+  curl http://localhost/ >/dev/null 2>&1
+  curl http://localhost/ >/dev/null 2>&1
+  curl http://localhost/ >/dev/null 2>&1
+  curl http://localhost/bad >/dev/null 2>&1
+  # Patch falsches Output Verzeichnis von webalizer 
+  sudo sed -i -e"s:/var/www/webalizer:/var/www/html/webalizer:" /etc/webalizer/webalizer.conf 
+  sudo mkdir -p /var/www/html/webalizer 
+  # Logfiles von Apache rotieren und neue Analyse
+  sudo logrotate -f /etc/logrotate.d/apache2
+  sudo /etc/cron.daily/webalizer  
+SHELL
+end
+Sicherheit
+Die VW sollte zusätzlich mit einer Firewall abgesichert werden.
 
----
+Ist die VM Teil mehrerer VMs bzw. Webservers, können diese mittels eines Reverse Proxies zu einem zusammengefasst werden (braucht nur ein SSL-Zertifikat).
 
-## 9. Sicherheit
-
-Die VM sollte zusätzlich abgesichert werden:
-
-- Firewall konfigurieren
-- Nur benötigte Ports öffnen
-- Dienste minimieren
-
-Bei mehreren Webservern kann ein **Reverse Proxy** eingesetzt werden, um:
-
-- mehrere Dienste zusammenzufassen
-- nur ein SSL-Zertifikat zu verwenden
-- zentrale Zugriffskontrolle zu ermöglichen
-
-Ein Beispiel findet sich unter fwrp sowie im Kapitel Infrastruktur-Sicherheit.
-
----
-
-## 10. Fazit
-
-Durch die Automatisierung mittels Vagrant wird:
-
-- die Installation reproduzierbar
-- die Konfiguration dokumentiert
-- die Bereitstellung standardisiert
-- manuelle Fehler reduziert
-
-Die gesamte Serverumgebung kann mit `vagrant up` vollständig neu aufgebaut werden.
+Ein Beispiel dazu findet man unter fwrp und die Beschreibung unter 25 Infrastruktur-Sicherheit.
 
 
 
@@ -1041,3 +930,8 @@ Image-Registries
 können Anwendungen schnell, skalierbar und reproduzierbar betrieben werden.
 
 Im Vergleich zur klassischen Virtualisierung mit VirtualBox bietet Docker eine deutlich modernere und effizientere Lösung für Entwicklungs- und Produktionsumgebungen.
+
+
+
+Projekt
+![Minecraft-Docjer](image.png)
