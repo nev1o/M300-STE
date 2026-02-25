@@ -2,7 +2,7 @@
 
 #Inhaltsverzeichnis
 
-- [3. GitHub Account & Repository](#3. GitHub Account & Repository)
+- [3. GitHub Account & Repository](#3-github-account--repository)
 
 ### 3. GitHub Account & Repository
 3.1 GitHub Account
