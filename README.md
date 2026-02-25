@@ -9,6 +9,7 @@
 - [LB2 Hands-on – Automatisierung eines Serverdienstes mit Vagrant](#lb2-hands-on--automatisierung-eines-serverdienstes-mit-vagrant)
 - [03 – Docker & Containerisierung](#03--docker--containerisierung)
 - [Minecraft Server mit Docker erstellen:](#minecraft-server-mit-docker-erstellen)
+- [Aufgetretenes Problem:](#aufgetretenes-problem)
 
 ### 3. GitHub Account & Repository
 3.1 GitHub Account
